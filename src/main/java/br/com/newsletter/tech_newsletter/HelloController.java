@@ -1,5 +1,6 @@
 package br.com.newsletter.tech_newsletter;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,7 @@ public class HelloController {
 
     // Um novo método para salvar assinantes virá aqui
     @PostMapping("/subscribe")
-    public Subscriber subscribe(@RequestBody Subscriber subscriber) {
+    public Subscriber subscribe(@Valid @RequestBody Subscriber subscriber) { // <- Adicione @Valid aqui
         return subscriberRepository.save(subscriber);
     }
 
