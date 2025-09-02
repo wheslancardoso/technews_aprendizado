@@ -1,11 +1,9 @@
 package br.com.newsletter.tech_newsletter;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable; // <- Novo import
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional; // <- Novo import
 import java.util.List;
 
@@ -39,5 +37,22 @@ public class HelloController {
     @GetMapping("/subscribers/{id}")
     public Optional<Subscriber> getSubscriberById(@PathVariable Long id) {
         return subscriberRepository.findById(id);
+    }
+
+    @DeleteMapping("/subscribers/{id}")
+    public ResponseEntity<Void> deleteSubscriber(@PathVariable Long id) {
+        subscriberRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/subscribers/{id}")
+    public ResponseEntity<Subscriber> updateSubscriber(@PathVariable Long id, @Valid @RequestBody Subscriber updatedSubscriber) {
+
+        return subscriberRepository.findById(id)
+                .map(existingSubscriber -> {
+                    existingSubscriber.setEmail(updatedSubscriber.getEmail());
+                    return ResponseEntity.ok(subscriberRepository.save(existingSubscriber));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
